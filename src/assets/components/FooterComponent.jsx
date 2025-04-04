@@ -9,16 +9,16 @@ const FooterComponent = () => {
           <div className="text-white">
             <div className="my-3">
               <a href="#" className="text-decoration-none text-reset">
-                <i class="bi bi-instagram"></i>{" "}
+                <i className="bi bi-instagram"></i>{" "}
               </a>
               <a href="#" className="text-decoration-none text-reset">
-                <i class="bi bi-facebook"></i>{" "}
+                <i className="bi bi-facebook"></i>{" "}
               </a>
               <a href="#" className="text-decoration-none text-reset">
-                <i class="bi bi-twitter-x"></i>{" "}
+                <i className="bi bi-twitter-x"></i>{" "}
               </a>
               <a href="#" className="text-decoration-none text-reset">
-                <i class="bi bi-youtube"></i>{" "}
+                <i className="bi bi-youtube"></i>{" "}
               </a>
             </div>
             <div className="text-white d-flex flex-column">

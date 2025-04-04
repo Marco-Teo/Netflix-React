@@ -5,8 +5,8 @@ class CarouselComponent extends Component {
   state = {
     movies: [],
     currentSlide: 0,
-    itemsPerSlide: [],
   };
+
   getMovies = (url) => {
     fetch(url)
       .then((response) => {
@@ -17,47 +17,69 @@ class CarouselComponent extends Component {
         }
       })
       .then((data) => {
-        console.log("film", data);
         this.setState({
           ...this.state,
-          movies: data.Search,
+          movies: data.Search || [],
         });
       })
       .catch((err) => {
         console.log("errore", err);
       });
   };
-  componentDidMount = () => {
+
+  componentDidMount() {
     const { url } = this.props;
     this.getMovies(url);
-  };
-
-  componentDidUpdate(prevProps, prevState) {
-    const { itemsPerSlide } = this.state;
-    if (prevState.movies !== this.state.movies) {
-      const numberOfElements = this.state.movies.slice(0, 5);
-      this.setState({
-        itemsPerSlide: numberOfElements,
-      });
-    }
-    console.log(itemsPerSlide);
   }
 
+  groupMovies = (movies, itemsPerSlide) => {
+    const grouped = [];
+    for (let i = 0; i < movies.length; i += itemsPerSlide) {
+      grouped.push(movies.slice(i, i + itemsPerSlide));
+    }
+    return grouped;
+  };
+
   render() {
-    const { movies, currentSlide, itemsPerSlide } = this.state;
+    const { movies, currentSlide } = this.state;
+    const itemsPerSlide = 4;
+    const groupedMovies = this.groupMovies(movies, itemsPerSlide);
 
     return (
-      <Carousel activeIndex={currentSlide} className="bg-dark" variant="dark">
-        {movies.map((movie) => {
-          return (
-            <Carousel.Item key={movie.imdbID}>
-              <div>
-                <img src={movie.Poster} alt={movie.Title} />
-                <h3>{movie.Title}</h3>
-              </div>
-            </Carousel.Item>
-          );
-        })}
+      <Carousel
+        activeIndex={currentSlide}
+        onSelect={(index) => this.setState({ currentSlide: index })}
+        className="bg-dark"
+        variant="dark"
+      >
+        {groupedMovies.map((group, index) => (
+          <Carousel.Item key={index}>
+            <div className="d-flex justify-content-between gap-3 p-4">
+              {group.map((movie) => (
+                <div key={movie.imdbID} className="text-center text-white">
+                  <img
+                    src={movie.Poster}
+                    alt={movie.Title}
+                    style={{
+                      width: "150px",
+                      height: "230px",
+                      objectFit: "fill",
+                      borderRadius: "5px",
+                    }}
+                  />
+                  <p
+                    className="mt-2 overflow-hidden text-ellipsis"
+                    style={{
+                      maxWidth: 200,
+                    }}
+                  >
+                    {movie.Title}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </Carousel.Item>
+        ))}
       </Carousel>
     );
   }
